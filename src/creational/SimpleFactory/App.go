@@ -29,7 +29,8 @@ func main() {
 		}
 	}
 
-	OPS: fmt.Println("请输入运算符（+，-，*，/）：")
+OPS:
+	fmt.Println("请输入运算符（+，-，*，/）：")
 	for scanner.Scan() {
 		strOperate = scanner.Text()
 		operate = factory.CreateOperate(strOperate)
@@ -40,7 +41,8 @@ func main() {
 		}
 	}
 
-	PARAMS: fmt.Println("请输入第二个参数：")
+PARAMS:
+	fmt.Println("请输入第二个参数：")
 	for scanner.Scan() {
 		numTwo, err = strconv.ParseFloat(scanner.Text(), 64)
 
