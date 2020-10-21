@@ -4,11 +4,10 @@ type NormalStr struct {
 	Prices
 }
 
-func (str *NormalStr) SetData(total int, price float64) {
-	str.total = total
-	str.price = price
+func (str *NormalStr) SetData(prices float64) {
+	str.prices = prices
 }
 
 func (str *NormalStr) Algorithm() float64 {
-	return str.price * float64(str.total)
+	return str.prices
 }

@@ -1,11 +1,10 @@
 package strs
 
 type Prices struct {
-	total int
-	price float64
+	prices float64
 }
 
 type Str interface {
-	SetData(total int, price float64)
+	SetData(prices float64)
 	Algorithm() float64
 }

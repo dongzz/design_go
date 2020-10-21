@@ -18,6 +18,7 @@ func main() {
 	strMap[1] = "打八折"
 	strMap[2] = "打七折"
 	strMap[3] = "打五折"
+	strMap[4] = "满300减30"
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("请输入商品数量：")
@@ -51,7 +52,7 @@ func main() {
 	fmt.Println("请选择：")
 	for scanner.Scan() {
 		strategy, err = strconv.Atoi(scanner.Text())
-		if err != nil {
+		if err != nil || strMap[strategy] == "" {
 			fmt.Println("请输入正确的折扣类型：")
 		} else {
 			break
