@@ -39,10 +39,12 @@ func (l *Leaf) CreateIterator() {
 
 func (l *Leaf) Display(depth int) {
 	// 输出树形结构的叶子结点，这里直接输出设备名
+
+	fmt.Print("|")
 	for i := 0; i < depth; i++ {
-		fmt.Print("*")
+		fmt.Print("-")
 	}
-	fmt.Println(l.GetName())
+	fmt.Println(">", l.GetName())
 }
 
 func (l *Leaf) SetName(name string) {

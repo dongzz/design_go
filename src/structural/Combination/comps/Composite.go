@@ -47,9 +47,9 @@ func (c *Composite) Remove(menu Menu) {
 func (c *Composite) Display(depth int) {
 	// 输出树形结构
 	for i := 0; i < depth; i++ {
-		fmt.Print("*")
+		fmt.Print("-")
 	}
-	fmt.Println(c.GetName())
+	fmt.Println(">", c.GetName())
 	// 递归显示
 	for _, com := range c.Arr {
 		com.Display(depth + 1)
