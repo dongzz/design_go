@@ -128,7 +128,7 @@
         Decorator
         
     -   代理模式
-        Agency
+        Proxy
     
     -   外观模式
         Appearance
