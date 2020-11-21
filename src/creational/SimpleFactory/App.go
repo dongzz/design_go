@@ -1,59 +1,100 @@
 package main
 
 import (
-	"bufio"
-	"creational/SimpleFactory/operates"
 	"fmt"
 	"os"
 	"strconv"
 )
+import "bufio"
+
+type Operator interface {
+	GetResult() float64
+	SetData(numberA, numberB float64)
+}
+
+type AddOperator struct {
+	NumberA float64
+	NumberB float64
+}
+
+func (a AddOperator) GetResult() float64 {
+	return a.NumberA + a.NumberB
+}
+
+func (a *AddOperator) SetData(numberA, numberB float64) {
+	a.NumberA = numberA
+	a.NumberB = numberB
+}
+
+type SubOperator struct {
+	NumberA float64
+	NumberB float64
+}
+
+func (a SubOperator) GetResult() float64 {
+	return a.NumberA - a.NumberB
+}
+
+func (a *SubOperator) SetData(numberA, numberB float64) {
+	a.NumberA = numberA
+	a.NumberB = numberB
+}
+
+type OperatorSimpleFactory struct{}
+
+func (factory *OperatorSimpleFactory) CreateOperator(operatorType string) Operator {
+	switch operatorType {
+	case "+":
+		return &AddOperator{}
+	case "-":
+		return &SubOperator{}
+	default:
+		return nil
+	}
+}
 
 func main() {
-	var numOne, numTwo float64
-	var strOperate string
+	var numberA, numberB float64
+	var operatorType string
 	var err error
-	var operate operates.Ops
-
-	factory := new(operates.OpsFactory)
-
-	fmt.Println("请输入第一个参数：")
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for scanner.Scan() {
-		numOne, err = strconv.ParseFloat(scanner.Text(), 64)
-
-		if err != nil {
-			fmt.Println("输入的格式错误，请重新输入：")
-		} else {
-			goto OPS
+	var operator Operator
+	factory := &OperatorSimpleFactory{}
+	fmt.Println("请输入第一个数：")
+	in := bufio.NewScanner(os.Stdin)
+	for {
+		if in.Scan() {
+			numberA, err = strconv.ParseFloat(in.Text(), 64)
+			if err != nil {
+				fmt.Println("输入错误, 请重新输入！")
+			} else {
+				break
+			}
 		}
 	}
-
-OPS:
-	fmt.Println("请输入运算符（+，-，*，/）：")
-	for scanner.Scan() {
-		strOperate = scanner.Text()
-		operate = factory.CreateOperate(strOperate)
-		if operate == nil {
-			fmt.Println("输入的格式错误，请重新输入 (+，-，*，/)：")
-		} else {
-			goto PARAMS
+	fmt.Println("请输入运算符：+、-")
+	for {
+		if in.Scan() {
+			operatorType = in.Text()
+			operator = factory.CreateOperator(operatorType)
+			if operator == nil {
+				fmt.Println("请输入正确的运算符")
+			} else {
+				break
+			}
 		}
 	}
-
-PARAMS:
-	fmt.Println("请输入第二个参数：")
-	for scanner.Scan() {
-		numTwo, err = strconv.ParseFloat(scanner.Text(), 64)
-
-		if err != nil {
-			fmt.Println("输入的格式错误，请重新输入：")
-		} else {
-			break
+	fmt.Println("请输入第二个数：")
+	for {
+		if in.Scan() {
+			numberB, err = strconv.ParseFloat(in.Text(), 64)
+			if err != nil {
+				fmt.Println("输入错误, 请重新输入！")
+			} else {
+				break
+			}
 		}
 	}
+	operator.SetData(numberA, numberB)
 
-	operate.SetData(numOne, numTwo)
-	result := operate.GetResult()
-	fmt.Printf("%f %s %f = %f\n", numOne, strOperate, numTwo, result)
+	fmt.Printf("%f %s %f = %f", numberA, operatorType, numberB, operator.GetResult())
 }

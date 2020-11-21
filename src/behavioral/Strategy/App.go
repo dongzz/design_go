@@ -1,12 +1,68 @@
 package main
 
 import (
-	"behavioral/Strategy/strs"
 	"bufio"
 	"fmt"
 	"os"
 	"strconv"
 )
+
+type CashContext struct {
+	cash CashSuper
+}
+
+func (context *CashContext) SetCash(strategy int) {
+	switch strategy {
+	case 0:
+		context.cash = &NormalCash{}
+	case 1:
+		context.cash = &EightCash{}
+	case 2:
+		context.cash = &SevenCash{}
+	case 3:
+		context.cash = &FiveCash{}
+	case 4:
+		context.cash = &FullSubCash{}
+	}
+}
+
+func (context *CashContext) GetResult(money float64) float64 {
+	return context.cash.AcceptCash(money)
+}
+
+type CashSuper interface {
+	AcceptCash(money float64) float64
+}
+
+type NormalCash struct{}
+
+func (cash *NormalCash) AcceptCash(money float64) float64 {
+	return money
+}
+
+type EightCash struct{}
+
+func (cash *EightCash) AcceptCash(money float64) float64 {
+	return money * 0.8
+}
+
+type SevenCash struct{}
+
+func (cash *SevenCash) AcceptCash(money float64) float64 {
+	return money * 0.7
+}
+
+type FiveCash struct{}
+
+func (cash *FiveCash) AcceptCash(money float64) float64 {
+	return money * 0.5
+}
+
+type FullSubCash struct{}
+
+func (cash *FullSubCash) AcceptCash(money float64) float64 {
+	return money - float64(int(money)/300)*30
+}
 
 func main() {
 	var total int
@@ -59,8 +115,8 @@ func main() {
 		}
 	}
 
-	context := new(strs.Context)
-	context.Context(strategy, total, price)
+	context := &CashContext{}
+	context.SetCash(strategy)
 
-	fmt.Printf("单价：%f 数量：%d 折扣方式：%s 总价： %f\n", price, total, strMap[strategy], context.ContextInterface())
+	fmt.Printf("单价：%f 数量：%d 折扣方式：%s 总价： %f\n", price, total, strMap[strategy], context.GetResult(price*float64(total)))
 }
