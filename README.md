@@ -131,7 +131,7 @@
         Proxy
     
     -   外观模式
-        Appearance
+        Facade
     
     -   桥接模式
         Bridge
