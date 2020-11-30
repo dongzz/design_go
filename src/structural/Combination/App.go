@@ -1,44 +1,120 @@
 package main
 
-import "structural/Combination/comps"
+import "fmt"
+
+type Company interface {
+	Add(company Company)
+	Remove(company Company)
+	Display(dept int)
+	LineOfDuty()
+}
+
+type ConcreteCompany struct {
+	name            string
+	childrenCompany []Company
+}
+
+func (company *ConcreteCompany) Add(c Company) {
+	company.childrenCompany = append(company.childrenCompany, c)
+}
+
+func (company *ConcreteCompany) Remove(c Company) {
+	for i, c2 := range company.childrenCompany {
+		if c2 == c {
+			company.childrenCompany = append(company.childrenCompany[:i], company.childrenCompany[i+1:]...)
+		}
+	}
+}
+
+func (company *ConcreteCompany) Display(dept int) {
+	for i := dept; i > 0; i-- {
+		fmt.Printf("-")
+	}
+	fmt.Println(company.name)
+
+	for _, c := range company.childrenCompany {
+		c.Display(dept + 2)
+	}
+}
+
+func (company *ConcreteCompany) LineOfDuty() {
+	for _, c := range company.childrenCompany {
+		c.LineOfDuty()
+	}
+}
+
+type HRDepartment struct {
+	name            string
+	childrenCompany []Company
+}
+
+func (company *HRDepartment) Add(c Company) {
+	company.childrenCompany = append(company.childrenCompany, c)
+}
+
+func (company *HRDepartment) Remove(c Company) {
+	for i, c2 := range company.childrenCompany {
+		if c2 == c {
+			company.childrenCompany = append(company.childrenCompany[:i], company.childrenCompany[i+1:]...)
+		}
+	}
+}
+
+func (company *HRDepartment) Display(dept int) {
+	for i := dept; i > 0; i-- {
+		fmt.Printf("-")
+	}
+	fmt.Println(company.name)
+
+	for _, c := range company.childrenCompany {
+		c.Display(dept + 2)
+	}
+}
+
+func (company *HRDepartment) LineOfDuty() {
+	fmt.Printf("%s 员工招聘培训管理\n", company.name)
+}
+
+type FinanceDepartment struct {
+	name string
+}
+
+func (company *FinanceDepartment) Add(c Company) {
+
+}
+
+func (company *FinanceDepartment) Remove(c Company) {
+
+}
+
+func (company *FinanceDepartment) Display(dept int) {
+	for i := dept; i > 0; i-- {
+		fmt.Printf("-")
+	}
+	fmt.Println(company.name)
+}
+
+func (company *FinanceDepartment) LineOfDuty() {
+	fmt.Printf("%s 公司财务收支管理\n", company.name)
+}
 
 func main() {
-	root := comps.Composite{
-		Name: "和平饭店",
-		Arr:  make([]comps.Menu, 0),
-	}
+	company := ConcreteCompany{name: "新锐和达"}
+	company.Add(&HRDepartment{name: "人事部"})
+	company.Add(&FinanceDepartment{name: "财务部"})
 
-	branchLevel21 := comps.Composite{
-		Name: "招牌菜",
-		Arr:  make([]comps.Menu, 0),
-	}
-	branchLevel21.Add(&comps.Leaf{Name: "红烧肉", Description: "精五花", Price: 20.0})
-	branchLevel21.Add(&comps.Leaf{Name: "醋溜土豆丝", Vegetarian: true, Description: "新鲜", Price: 10.0})
-	branchLevel21.Add(&comps.Leaf{Name: "京酱肉丝", Description: "鲜肉", Price: 30.0})
+	company2 := ConcreteCompany{name: "大通关"}
+	company2.Add(&HRDepartment{name: "大通关人事部"})
+	company2.Add(&FinanceDepartment{name: "大通关财务部"})
+	company.Add(&company2)
 
-	root.Add(&branchLevel21)
+	company3 := ConcreteCompany{name: "云游网"}
+	company3.Add(&HRDepartment{name: "云游网人事部"})
+	company3.Add(&FinanceDepartment{name: "云游网财务部"})
+	company.Add(&company3)
 
-	// 并列的二级节点
-	branchLevel22 := comps.Composite{
-		Name: "家常菜",
-		Arr:  make([]comps.Menu, 0),
-	}
-	branchLevel22.Add(&comps.Leaf{Name: "辣椒炒肉", Description: "1", Price: 14.2})
-	branchLevel22.Add(&comps.Leaf{Name: "杂拌", Description: "1234", Price: 15})
-	branchLevel22.Add(&comps.Leaf{Name: "回锅肉", Description: "2134", Price: 30})
-
-	branchLevel221 := comps.Composite{
-		Name: "麻辣烫",
-		Arr:  make([]comps.Menu, 0),
-	}
-	branchLevel221.Add(&comps.Leaf{Name: "豆蔻", Vegetarian: true, Description: "1", Price: 0.5})
-	branchLevel221.Add(&comps.Leaf{Name: "腐竹", Vegetarian: true, Description: "1", Price: 0.5})
-	branchLevel22.Add(&branchLevel221)
-
-	root.Add(&branchLevel22)
-
-	root.Display(1)
-
-	root.Remove(&branchLevel22)
-	root.Display(1)
+	fmt.Println("结构图")
+	company.Display(1)
+	fmt.Println("职责")
+	company.LineOfDuty()
 }
