@@ -92,7 +92,7 @@
         Visitor
         
     -   中介者模式
-        Intermediary
+        Mediator
         
     -   解释器模式
         Interpreter
